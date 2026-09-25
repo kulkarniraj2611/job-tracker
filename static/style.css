@@ -1,0 +1,125 @@
+* { box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px 64px;
+    color: #1a1a1a;
+    background: #fafafa;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+h1 { font-size: 1.5rem; margin: 0; }
+
+.btn {
+    background: #2563eb;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+}
+
+.btn.secondary { background: #6b7280; }
+
+.filter-bar {
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+.filter-bar select {
+    padding: 4px 8px;
+    margin-left: 6px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+    vertical-align: top;
+}
+
+th { background: #f3f4f6; font-weight: 600; }
+
+tr.reminder-due { background: #fff7ed; }
+
+.badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.status-applied { background: #3b82f6; }
+.status-interview { background: #f59e0b; }
+.status-offer { background: #10b981; }
+.status-rejected { background: #ef4444; }
+
+.actions a, .actions .link-btn {
+    margin-right: 10px;
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 0.85rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.inline-form { display: inline; }
+
+.empty { color: #666; font-style: italic; }
+
+.app-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 420px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.app-form label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+
+.app-form input, .app-form select, .app-form textarea {
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.app-form button { margin-top: 18px; }
+
+.error {
+    color: #b91c1c;
+    background: #fee2e2;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}

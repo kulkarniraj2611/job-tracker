@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Application Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Job Application Tracker</h1>
+        <a class="btn" href="{{ url_for('main.add') }}">+ Add Application</a>
+    </header>
+
+    <form method="get" class="filter-bar">
+        <label for="status">Filter by status:</label>
+        <select name="status" id="status" onchange="this.form.submit()">
+            <option value="">All</option>
+            {% for s in statuses %}
+                <option value="{{ s.name }}" {% if status_filter == s.name %}selected{% endif %}>
+                    {{ s.value }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if applications|length == 0 %}
+        <p class="empty">No applications yet. Add your first one!</p>
+    {% else %}
+    <table>
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Applied</th>
+                <th>Reminder</th>
+                <th>Notes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr class="{{ 'reminder-due' if app.id in reminder_ids else '' }}">
+                <td>{{ app.company_name }}</td>
+                <td>{{ app.role or '-' }}</td>
+                <td><span class="badge status-{{ app.status.name|lower }}">{{ app.status.value }}</span></td>
+                <td>{{ app.applied_date }}</td>
+                <td>{{ app.reminder_date or '-' }}</td>
+                <td class="notes-cell">{{ app.notes or '' }}</td>
+                <td class="actions">
+                    <a href="{{ url_for('main.edit', app_id=app.id) }}">Edit</a>
+                    <form method="post" action="{{ url_for('main.delete', app_id=app.id) }}"
+                          onsubmit="return confirm('Delete this application?');" class="inline-form">
+                        <button type="submit" class="link-btn">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</body>
+</html>
