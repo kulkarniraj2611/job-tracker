@@ -67,7 +67,9 @@ SQLAlchemy
    v
 PostgreSQL Database
 
-The CI/CD pipeline follows:
+
+
+## The CI/CD pipeline follows:
 GitHub
    |
    v
