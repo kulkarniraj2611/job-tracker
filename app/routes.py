@@ -109,7 +109,6 @@ def delete(app_id):
 
 
 @bp.route("/health")
-@bp.route("/health")
 def health():
     return jsonify({"status": "ok"})
 
