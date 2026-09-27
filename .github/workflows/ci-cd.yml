@@ -38,6 +38,8 @@ jobs:
       - name: Check health endpoint
         run: |
           sleep 5
+          docker ps -a 
+          docker logs job-tracker 
           curl -f http://localhost:5000/health
 
   deploy:
