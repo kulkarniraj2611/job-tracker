@@ -66,10 +66,11 @@ SQLAlchemy
    |
    v
 PostgreSQL Database
+```
 
+### The CI/CD pipeline follows
 
-
-## The CI/CD pipeline follows:
+```text
 GitHub
    |
    v
@@ -90,50 +91,81 @@ Render Deployment
    |
    v
 Live Application
+```
 
-Run Locally Without Docker
-1. Create a virtual environment
+## Run Locally Without Docker
+
+### 1. Create a virtual environment
+
 Windows:
+
+```bash
 python -m venv venv
 venv\Scripts\activate
+```
 
 Linux/macOS:
+
+```bash
 python -m venv venv
 source venv/bin/activate
+```
 
-2. Install dependencies
+### 2. Install dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-3. Configure PostgreSQL
-Set the DATABASE_URL environment variable to your PostgreSQL database connection string.
+### 3. Configure PostgreSQL
+
+Set the `DATABASE_URL` environment variable to your PostgreSQL database connection string.
+
 Example:
+
+```text
 postgresql+psycopg2://postgres:password@localhost:5432/jobtracker
+```
 
-4. Run database migrations
+### 4. Run database migrations
+
+```bash
 flask --app run db upgrade
+```
 
-5. Start the application
+### 5. Start the application
+
+```bash
 python run.py
+```
 
-The application will be available at:
-http://localhost:5000
+The application will be available at: http://localhost:5000
 
-Run with Docker Compose
+## Run with Docker Compose
+
 The project includes a Docker Compose configuration for running the Flask application and PostgreSQL locally.
+
+```bash
 docker compose up --build
+```
 
-The application will be available at:
-http://localhost:5000
+The application will be available at: http://localhost:5000
 
-Docker
+## Docker
+
 The project contains a Dockerfile that defines how the Flask application is prepared and started.
+
 The Dockerfile:
+
 - Uses Python 3.11
 - Installs the project dependencies
 - Copies the application code
 - Exposes port 5000
 - Starts the Flask application using Gunicorn
+
 The Docker flow is:
+
+```text
 Dockerfile
     |
     v
@@ -144,57 +176,87 @@ Docker Container
     |
     v
 Flask Application
+```
 
-Testing
+## Testing
+
 The project uses pytest for automated testing.
+
 Run the tests locally using:
+
+```bash
 python -m pytest -v
+```
 
 The project contains 9 automated tests covering application functionality and the health endpoint.
-The CI/CD pipeline runs the tests automatically.
-If a test fails, the build-and-test job fails and the deployment job does not run.
-Code Quality
+
+The CI/CD pipeline runs the tests automatically. If a test fails, the build-and-test job fails and the deployment job does not run.
+
+## Code Quality
+
 The project uses Flake8 for Python code linting.
+
 Run Flake8 locally:
+
+```bash
 flake8 .
+```
 
 The GitHub Actions pipeline runs Flake8 before running the tests.
-Health Check
-The application provides a health check endpoint:
-/health
 
-Live health check:
-https://job-tracker-lh2q.onrender.com/health
+## Health Check
+
+The application provides a health check endpoint:
+
+```text
+/health
+```
+
+Live health check: https://job-tracker-lh2q.onrender.com/health
+
 It returns:
+
+```json
 {
   "status": "ok"
 }
+```
 
-The CI/CD pipeline uses this endpoint to verify that the Docker container started successfully and that the Flask application is responding.
-The pipeline checks:
+The CI/CD pipeline uses this endpoint to verify that the Docker container started successfully and that the Flask application is responding. The pipeline checks:
+
+```bash
 curl -f http://localhost:5000/health
+```
 
 If the health check fails, the build-and-test job fails and deployment is prevented.
-API Reference
-Method	Endpoint	Description
-GET	/api/applications	List all applications
-GET	/api/applications/<id>	Get one application
-POST	/api/applications	Create an application
-PUT	/api/applications/<id>	Update application fields/status
-DELETE	/api/applications/<id>	Delete an application
-GET	/api/applications/reminders	Get applications with upcoming reminders
 
+## API Reference
 
-CI/CD Pipeline
+| Method | Endpoint                     | Description                          |
+|--------|-------------------------------|---------------------------------------|
+| GET    | `/api/applications`           | List all applications                 |
+| GET    | `/api/applications/<id>`      | Get one application                   |
+| POST   | `/api/applications`           | Create an application                 |
+| PUT    | `/api/applications/<id>`      | Update application fields/status      |
+| DELETE | `/api/applications/<id>`      | Delete an application                 |
+| GET    | `/api/applications/reminders` | Get applications with upcoming reminders |
+
+## CI/CD Pipeline
+
 The project uses GitHub Actions for Continuous Integration and Continuous Deployment.
-The workflow file is:
-.github/workflows/ci-cd.yml
+
+The workflow file is: `.github/workflows/ci-cd.yml`
 
 The workflow is triggered when:
-- Code is pushed to main
-- A Pull Request is created targeting main
-CI Pipeline
+
+- Code is pushed to `main`
+- A Pull Request is created targeting `main`
+
+### CI Pipeline
+
 The pipeline performs the following steps:
+
+```text
 Checkout Repository
        |
        v
@@ -217,13 +279,18 @@ Run Docker Container
        |
        v
 Check /health
+```
 
-Deployment
+### Deployment
+
 Deployment runs only when:
-1. The workflow is triggered by a push to main
-2. The build-and-test job succeeds
-The deployment job uses the Render Deploy Hook stored as a GitHub Secret.
-The workflow also passes the GitHub commit SHA to Render so that the deployed version corresponds to the tested commit.
+
+1. The workflow is triggered by a push to `main`
+2. The `build-and-test` job succeeds
+
+The deployment job uses the Render Deploy Hook stored as a GitHub Secret. The workflow also passes the GitHub commit SHA to Render so that the deployed version corresponds to the tested commit.
+
+```text
 Successful CI
       |
       v
@@ -237,38 +304,63 @@ Render
       |
       v
 Live Application
+```
 
-GitHub Actions
+### GitHub Actions
+
 The workflow uses:
+
+```yaml
 runs-on: ubuntu-latest
+```
 
 to run jobs on a GitHub-hosted Ubuntu runner.
+
 It uses:
+
+```yaml
 uses: actions/checkout@v4
+```
 
 to check out the repository code.
+
 Python is configured using:
+
+```yaml
 uses: actions/setup-python@v5
+```
 
 with Python 3.11.
+
 The deployment job depends on the CI job:
+
+```yaml
 needs: build-and-test
+```
 
 Therefore, deployment will not occur if linting, testing, Docker build, Docker execution, or the health check fails.
-Environment Variables and Secrets
-The application uses environment variables for configuration.
-Important variables include:
-DATABASE_URL
-SECRET_KEY
-RENDER_GIT_COMMIT
+
+## Environment Variables and Secrets
+
+The application uses environment variables for configuration. Important variables include:
+
+- `DATABASE_URL`
+- `SECRET_KEY`
+- `RENDER_GIT_COMMIT`
 
 The Render deployment hook is stored securely as a GitHub Actions Secret:
-RENDER_DEPLOY_HOOK
+
+- `RENDER_DEPLOY_HOOK`
 
 Sensitive credentials and deployment information are not stored directly in the source code.
-Git Workflow
+
+## Git Workflow
+
 The project uses Git and GitHub for version control.
+
 Typical workflow:
+
+```text
 Create/modify code
        |
        v
@@ -285,10 +377,13 @@ GitHub
        |
        v
 GitHub Actions
+```
 
-Feature development can be performed on separate branches and merged into main using Pull Requests.
-The project includes a merged Pull Request for the health endpoint test.
-Project Structure
+Feature development can be performed on separate branches and merged into `main` using Pull Requests. The project includes a merged Pull Request for the health endpoint test.
+
+## Project Structure
+
+```text
 job-tracker/
 │
 ├── app/
@@ -320,43 +415,48 @@ job-tracker/
 ├── .flake8
 ├── .gitignore
 └── README.md
+```
 
-Deployment
+## Deployment
+
 The application is deployed on Render.
-Live URL:
-https://job-tracker-lh2q.onrender.com/
+
+Live URL: https://job-tracker-lh2q.onrender.com/
+
 The application uses:
+
 - Flask
 - Gunicorn
 - Docker
 - PostgreSQL
-Render provides the deployed commit ID through the RENDER_GIT_COMMIT environment variable.
-The application displays the running commit ID in the footer, which helps verify which version is currently deployed.
+
+Render provides the deployed commit ID through the `RENDER_GIT_COMMIT` environment variable. The application displays the running commit ID in the footer, which helps verify which version is currently deployed.
+
 Example:
+
+```text
 Running commit: a633a87
+```
 
-Final Project Details
-Application: Job Application Tracker
-Language: Python
-Framework: Flask
-Database: PostgreSQL
-Testing: pytest
-Linting: Flake8
-Containerization: Docker
-CI/CD: GitHub Actions
-Deployment: Render
-Application Port: 5000
-Health Endpoint: /health
-Automated Tests: 9
-Git Commits: 13
-Merged Pull Requests: 1
+## Final Project Details
 
-Author
+| Detail             | Value                  |
+|--------------------|------------------------|
+| Application        | Job Application Tracker |
+| Language           | Python                 |
+| Framework          | Flask                  |
+| Database           | PostgreSQL             |
+| Testing            | pytest                 |
+| Linting            | Flake8                 |
+| Containerization   | Docker                 |
+| CI/CD              | GitHub Actions         |
+| Deployment         | Render                 |
+| Application Port   | 5000                   |
+| Health Endpoint    | `/health`              |
+| Automated Tests    | 9                      |
+| Git Commits        | 13                     |
+| Merged Pull Requests | 1                    |
+
+## Author
+
 Developed individually as part of the CCA 2 Cloud Computing & DevOps project.
-
-After replacing the file, save it and run:
-
-```bash
-git add README.md
-git commit -m "docs: update README"
-git push origin main
