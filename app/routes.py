@@ -1,5 +1,5 @@
+import os
 from datetime import date, datetime, timedelta
-
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, abort
 
 from app import db
@@ -46,12 +46,14 @@ def index():
         ).all()
     }
 
+    commit = os.getenv("RENDER_GIT_COMMIT", "local")[:7]
     return render_template(
         "index.html",
         applications=applications,
         statuses=Status,
         status_filter=status_filter,
         reminder_ids=reminder_ids,
+        commit=commit,
     )
 
 
@@ -104,6 +106,12 @@ def delete(app_id):
     db.session.delete(application)
     db.session.commit()
     return redirect(url_for("main.index"))
+
+
+@bp.route("/health")
+@bp.route("/health")
+def health():
+    return jsonify({"status": "ok"})
 
 
 # ---------- JSON API routes ----------
