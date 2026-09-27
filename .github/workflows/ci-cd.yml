@@ -1,0 +1,50 @@
+name: CI/CD
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Flake8
+        run: flake8 .
+
+      - name: Run tests
+        run: python -m pytest -v
+
+      - name: Build Docker image
+        run: docker build -t job-tracker:${{ github.sha }} .
+
+      - name: Run Docker container
+        run: docker run -d --name job-tracker -p 5000:5000 job-tracker:${{ github.sha }}
+
+      - name: Check health endpoint
+        run: |
+          sleep 5
+          curl -f http://localhost:5000/health
+
+  deploy:
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Render
+        run: curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}&ref=${{ github.sha }}"
