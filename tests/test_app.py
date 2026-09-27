@@ -88,3 +88,9 @@ def test_reminders_endpoint(client):
     data = resp.get_json()
     assert len(data) == 1
     assert data[0]["company_name"] == "Acme"
+
+
+def test_health_check(client):
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.get_json() == {"status": "ok"}
